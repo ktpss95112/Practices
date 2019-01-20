@@ -2,7 +2,7 @@
 
 這題還滿好玩的，實際用gdb跑過，原始碼的邏輯大概長這樣：
 ```c=
-#include <stdlib.h>
+#include <stdio.h>
 #include <time.h>
 #include <stdlib.h>
 
